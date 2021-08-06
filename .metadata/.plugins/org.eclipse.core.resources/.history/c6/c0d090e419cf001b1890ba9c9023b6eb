@@ -1,0 +1,157 @@
+package Arreglos;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import Clases.Alumnos;
+
+public class ArregloAlumno {
+	
+	// atributo
+	private ArrayList<Alumnos> alumno;
+	//construcctor
+	
+	   public ArregloAlumno() {
+	    	alumno = new ArrayList <Alumnos> ();
+	    	
+	    	adicionar(new Alumnos(202010001 , "Juan ", "Prado Salazar", "07557853", 20,963542158, 0));
+		
+			
+	    	cargarAlumnos();
+	    }
+	   
+	   
+	   public void adicionar( Alumnos a) {
+		alumno.add(a);
+		grabarAlumnos();
+	   }
+	   
+	   public int tamaño() {
+		return alumno.size();
+	}
+	   
+	   public Alumnos obtener( int a ) {
+		return alumno.get( a );
+	}
+	   
+		public Alumnos buscar( int codAlumno ) {
+			for ( int i=0; i<tamaño(); i++ )
+				if ( obtener( i ).getCodAlumno() == codAlumno )
+					return obtener( i );
+			return null;
+		}
+		
+		public Alumnos  buscarDni( String dni ) {
+			Alumnos a;
+			for ( int i=0; i<tamaño(); i++ ) {
+				a = obtener( i );
+				if ( a.getDni().equals( dni  ) )
+					return a;
+			} 
+			return null;	
+			
+		}
+		
+		
+		public void eliminar( Alumnos a ) {
+			alumno.remove( a );
+			grabarAlumnos();
+		}
+		
+		public void actualizarArchivo() {
+			grabarAlumnos();
+		}
+
+		
+		
+		/*  metodos para grbar  o escribir datos */
+		
+		
+		private void grabarAlumnos() {
+			try {
+				PrintWriter pw;
+				String linea;
+				Alumnos x;
+				pw = new PrintWriter(new FileWriter("alumnos.txt"));
+				for(int i=0; i<tamaño(); i++) {
+					x = obtener(i);
+					linea = x.getCodAlumno() + ";" +
+							x.getNombres() + ";" +
+							x.getApellidos() + ";" +
+							x.getDni() + ";" +
+							x.getEdad() + ";" +
+							x.getCelular() + ";" +
+							x.getEstado();
+					pw.println(linea);
+				}
+				pw.close();
+			}
+			catch (Exception e) {
+			}
+		}
+		
+		//Método para abrir o leer el txt
+		private void cargarAlumnos() {
+			try {
+				BufferedReader br;
+				String linea;
+				String[] s;
+				int codAlumno, edad, celular, estado;
+				String nombres, apellidos, dni;
+				br = new BufferedReader(new FileReader("alumnos.txt"));
+				while ((linea=br.readLine()) != null) {
+					s = linea.split(";");
+					codAlumno = Integer.parseInt(s[0].trim());
+					nombres = s[1].trim();
+					apellidos = s[2].trim();
+					dni = s[3].trim();
+					edad = Integer.parseInt(s[4].trim());
+					celular = Integer.parseInt(s[5].trim());
+					estado = Integer.parseInt(s[6].trim());
+					adicionar(new Alumnos(codAlumno, nombres, apellidos, dni, edad, celular, estado));
+				}
+				br.close();	
+			}
+			catch (Exception e) {
+			}
+		}
+		
+		
+		public int numeroCorrelativo() {
+			if (tamaño() == 0)
+				return 202010001;
+			else
+				return obtener(tamaño()-1).getCodAlumno() + 1;
+		}
+		
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
